@@ -92,15 +92,7 @@ export default function App() {
                 }
                 return { x: prev.x, y: prev.y + 20 }
             });
-        } else if (cd === directions.PAUSE) {
-            setCurrentHeadPosition((prev) => {
-                previousHead = prev;
-                return { x: prev.x, y: prev.y }
-            });
-        } else {
-            // console.log("inside", currentDirection);
         }
-
         if (cd !== directions.PAUSE) {
             setSnakeBody((sbs) => {
                 sb = sbs;
