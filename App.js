@@ -10,8 +10,7 @@ const directions = {
     LEFT: "LEFT",
     RIGHT: "RIGHT",
     UP: "UP",
-    DOWN: "DOWN",
-    PAUSE: "PAUSE"
+    DOWN: "DOWN"
 };
 
 const stages = {
@@ -36,7 +35,7 @@ export default function App() {
     const [gameStage, setGameStage] = React.useState(stages.STARTMENU);
     const [snakeBody, setSnakeBody] = React.useState([]);
     const [currentHeadPosition, setCurrentHeadPosition] = React.useState({ x: windowWidth / 2, y: windowHeight / 2 });
-    const [currentFoodPosition, setCurrentFoodPosition] = React.useState({ x: Math.floor(Math.random() * windowWidth), y: Math.floor(Math.random() * windowHeight) });
+    const [currentFoodPosition, setCurrentFoodPosition] = React.useState({ x: Math.floor(Math.random() * (windowWidth - 80)) + 40, y: Math.floor(Math.random() * (windowHeight - 120)) + 60 });
     const [currentDirection, setCurrentDirection] = React.useState(directions.LEFT);
 
 
@@ -51,7 +50,7 @@ export default function App() {
             setSnakeBody([...snakeBody, { x: currentHeadPosition.x + 20, y: currentHeadPosition.y }, { x: currentHeadPosition.x + 40, y: currentHeadPosition.y }, { x: currentHeadPosition.x + 60, y: currentHeadPosition.y }, { x: currentHeadPosition.x + 80, y: currentHeadPosition.y }]);
             interval = setInterval(() => {
                 updateFrame();
-            }, 100);
+            }, 50);
         }
         return () => clearInterval(interval);
     }, [gameStage])
@@ -155,7 +154,7 @@ export default function App() {
 
             console.log("yekia")
 
-            setCurrentFoodPosition({ x: Math.floor(Math.random() * windowWidth), y: Math.floor(Math.random() * windowHeight) });
+            setCurrentFoodPosition({ x: Math.floor(Math.random() * (windowWidth - 80)) + 40, y: Math.floor(Math.random() * (windowHeight - 120)) + 60 });
             addBody();
             addBody();
             setScore(prev => prev + 100);
@@ -167,6 +166,13 @@ export default function App() {
                 if (intersectRect2(cheadpos, item)) {
                     console.log("makliov", cheadpos, item);
                     setGameStage(stages.GAMEOVER);
+                    setCurrentHeadPosition({ x: windowWidth / 2, y: windowHeight / 2 });
+                    setTimeout(() => {
+                        setSnakeBody([]);
+                        setCurrentFoodPosition({ x: Math.floor(Math.random() * windowWidth), y: Math.floor(Math.random() * windowHeight) });
+                        setCurrentDirection(directions.LEFT);
+                    }, 10);
+
                     // setCurrentDirection(directions.PAUSE);
                 }
             }
@@ -210,21 +216,30 @@ export default function App() {
     }
 
 
-    const onSwipe = (gestureName, gestureState) => {
-        const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
-        this.setState({ gestureName: gestureName });
+    const onSwipe = (gestureName) => {
+
+        console.log(gestureName);
+        // const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+        // this.setState({ gestureName: gestureName });
         switch (gestureName) {
             case SWIPE_UP:
-                this.setState({ backgroundColor: 'red' });
+                if (currentDirection != directions.DOWN) {
+                    setCurrentDirection(directions.UP)
+                }
                 break;
             case SWIPE_DOWN:
-                this.setState({ backgroundColor: 'green' });
-                break;
+                if (currentDirection != directions.UP) {
+                    setCurrentDirection(directions.DOWN)
+                } break;
             case SWIPE_LEFT:
-                this.setState({ backgroundColor: 'blue' });
+                if (currentDirection != directions.RIGHT) {
+                    setCurrentDirection(directions.LEFT)
+                }
                 break;
             case SWIPE_RIGHT:
-                this.setState({ backgroundColor: 'yellow' });
+                if (currentDirection != directions.LEFT) {
+                    setCurrentDirection(directions.RIGHT)
+                }
                 break;
         }
     }
@@ -279,11 +294,11 @@ export default function App() {
                         velocityThreshold: 0.3,
                         directionalOffsetThreshold: 80
                     }}
-                    onSwipe={(direction, state) => onSwipe(direction, state)}
+                    onSwipe={(direction) => onSwipe(direction)}
                     style={styles.container}>
                     {renderSnake()}
                     {renderFood()}
-                    <View style={{ position: "absolute", bottom: 0, width: 200, height: 200, left: windowWidth / 2 - 100, backgroundColor: "grey", alignItems: "center" }}>
+                    {/* <View style={{ position: "absolute", bottom: 0, width: 200, height: 200, left: windowWidth / 2 - 100, backgroundColor: "grey", alignItems: "center" }}>
                         <Text style={{ color: "white" }}>{score}</Text>
                         <TouchableOpacity onPress={() => setCurrentDirection(directions.UP)} style={styles.button}><Text>UP</Text></TouchableOpacity>
                         <View style={{ flexDirection: "row" }}>
@@ -294,7 +309,7 @@ export default function App() {
                         </View>
                         <TouchableOpacity onPress={() => setCurrentDirection(directions.DOWN)} style={styles.button}><Text>DOWN</Text></TouchableOpacity>
 
-                    </View>
+                    </View> */}
                 </GestureRecognizer>
             }
             {gameStage === stages.GAMEOVER &&
