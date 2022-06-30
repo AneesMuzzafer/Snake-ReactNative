@@ -21,7 +21,7 @@ const stages = {
 };
 
 let cd = null;
-var previousHead;
+var previousHead = null;
 var previousItem = { x: null, y: null };
 var temp = { x: null, y: null };
 var sb;
@@ -151,6 +151,8 @@ export default function App() {
             addBody();
             setScore(prev => prev + 100);
         }
+
+        //commit
 
         sb.forEach((item, index) => {
             // console.log("item", i, "----- cheadpos", cheadpos)
