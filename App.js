@@ -21,7 +21,7 @@ const stages = {
 };
 
 let cd = null;
-var previousHead = null;
+var previousHead;
 var previousItem = { x: null, y: null };
 var temp = { x: null, y: null };
 var sb;
